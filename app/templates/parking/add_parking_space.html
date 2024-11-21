@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Parking Space</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input[type=text], input[type=number], input[type=time], select, input[type=checkbox] {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .checkbox-group, .time-inputs {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .time-inputs input {
+            width: 48%; /* Adjusted for layout */
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+    <form action="{{ url_for('add_parking_space') }}" method="post">
+        <h1>Create a New Parking Space</h1> 
+
+        <!-- Adjusted form fields for parking space requirements -->
+        <div class="form-group">
+            <label for="space_id">Space ID:</label>
+            <input type="text" id="space_id" name="space_id" required>
+        </div>
+        <div class="form-group">
+            <label for="type_of_space">Type of Space:</label>
+            <select id="type_of_space" name="type_of_space" required>
+                <option value="regular">Regular</option>
+                <option value="handicapped">Handicapped</option>
+                <option value="vip">VIP</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="num_spots">Number of Spots:</label>
+            <input type="number" id="num_spots" name="num_spots" required min="1">
+        </div>
+        
+        <div class="form-group">
+            <label for="cost_per_hr">Cost per Hour:</label>
+            <input type="number" id="cost_per_hr" name="cost_per_hr" required>
+        </div>
+        <div class="form-group">
+            <label for="cost_per_day">Cost per Day:</label>
+            <input type="number" id="cost_per_day" name="cost_per_day" required>
+        </div>
+        <div class="form-group">
+            <label for="cost_per_month">Cost per Month:</label>
+            <input type="number" id="cost_per_month" name="cost_per_month" required>
+        </div>
+        <div class="form-group">     
+            <label>Schedule:</label><br>
+            <input type="checkbox" id="all_days" name="days" value="all" checked> Available All Days<br>
+            <!-- Individual day scheduling -->
+            <div id="individual_days" style="display: none;">
+                <input type="checkbox" name="days" value="Monday"> Monday<br>
+                <input type="checkbox" name="days" value="Tuesday"> Tuesday<br>
+                <input type="checkbox" name="days" value="Wednesday"> Wednesday<br>
+                <input type="checkbox" name="days" value="Thursday"> Thursday<br>
+                <input type="checkbox" name="days" value="Friday"> Friday<br>
+                <input type="checkbox" name="days" value="Saturday"> Saturday<br>
+                <input type="checkbox" name="days" value="Sunday"> Sunday<br> 
+            </div>
+        </div>
+        <div class="form-group time-inputs">
+            <div>
+                <label for="start_time">Start Time:</label>
+                <input type="time" id="start_time" name="start_time" required>
+            </div>
+            <div>
+                <label for="end_time">End Time:</label>
+                <input type="time" id="end_time" name="end_time" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="full_day" name="full_day" checked> Available Full Day<br>
+        </div>
+        <button type="submit">Create Parking Space</button>
+        <br><br>
+        <a class="button" href="{{ url_for('supervisor_dashboard') }}">Back to Dashboard</a>
+    </form>
+
+    <script>
+        document.getElementById('full_day').addEventListener('change', function() {
+            const isChecked = this.checked;
+            document.getElementById('start_time').value = isChecked ? '00:00' : '';
+            document.getElementById('end_time').value = isChecked ? '23:59' : '';
+        });
+
+        document.getElementById('all_days').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('#individual_days input[type="checkbox"]');
+            const display = this.checked ? 'none' : 'block';
+            document.getElementById('individual_days').style.display = display;
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+    </script>
+</body>
+</html>

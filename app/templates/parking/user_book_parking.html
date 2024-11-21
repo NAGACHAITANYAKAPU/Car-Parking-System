@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Parking Per Hour</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input[type="number"],
+        select,
+        input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Parking Spot</h1>
+    <form action="{{ url_for('user_confirm_booking', space_id=parking_space.space_id) }}" method="post">
+        <div class="form-group">
+            <label for="bookingType">Booking Type:</label>
+            <select name="bookingType" id="bookingType" onchange="toggleDateTimeInputs()" readonly>
+                <option value="per_hour" selected>Per Hour</option> 
+            </select>
+        </div>
+        <input type="hidden" id="costPerHour" value="{{ parking_space.cost.per_hr }}">
+        <input type="hidden" id="costPerDay" value="{{ parking_space.cost.per_day }}">
+        <input type="hidden" id="costPerMonth" value="{{ parking_space.cost.per_month }}">
+        
+        <div class="form-group" id="dateTimeGroup">
+            <label for="fromTime">From:</label>
+            <select id="fromTime" name="fromTime"></select>
+            <label for="toTime">To:</label>
+            <select id="toTime" name="toTime"></select>
+        </div>
+
+        <div class="form-group">
+            <p id="amountDisplay">Total Amount: USD 0</p>
+            <input type="hidden" id="totalCost" name="totalCost" value="">
+
+            <input type="hidden" id="durationInHours" name="durationInHours" value="">
+
+        </div>
+        
+        <div class="form-group">
+            <label for="car">Select Your Car:</label>
+            <select name="car" id="car">
+                {% for car in cars %}
+                <option value="{{ car._id }}">{{ car.make }} {{ car.model }} --  {{ car.number_plate }}</option>
+                {% endfor %}    
+                <option value="new">Add New Car</option>
+            </select>
+        </div>
+
+        
+        <button type="submit" class="submit-btn">Book Now</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            populateTimeOptions();
+            toggleDateTimeInputs();
+            calculateAmount();
+        });
+
+        var hasCars = {{ 'false' if no_cars else 'true' }};
+        if (!hasCars) {
+            alert("You need to add a car before making a booking.");
+            window.open("{{ url_for('add_car') }}", "_blank");
+        }
+
+
+        function populateTimeOptions() {
+            const timeOptionsFrom = document.getElementById('fromTime');
+            const timeOptionsTo = document.getElementById('toTime');
+            for (let hour = 0; hour < 24; hour++) {
+                for (let minute = 0; minute < 60; minute += 15) {
+                    const timeValue = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    const timeDisplay = formatAMPM(timeValue);
+                    const optionFrom = new Option(timeDisplay, timeValue);
+                    const optionTo = new Option(timeDisplay, timeValue);
+                    timeOptionsFrom.add(optionFrom);
+                    timeOptionsTo.add(optionTo);
+                }
+            }
+        }
+
+        function updateToTimeOptions() {
+            const fromTime = document.getElementById('fromTime').value;
+            const toTimeSelect = document.getElementById('toTime');
+            const fromHour = parseInt(fromTime.split(':')[0], 10);
+            const fromMinutes = parseInt(fromTime.split(':')[1], 10);
+        
+            while (toTimeSelect.options.length > 0) {
+                toTimeSelect.remove(0);
+            }
+        
+            for (let hour = fromHour; hour < 24; hour++) {
+                for (let minute = 0; minute < 60; minute += 15) {
+                    if (hour === fromHour && minute < fromMinutes) continue;
+        
+                    const timeValue = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    const timeDisplay = formatAMPM(timeValue);
+                    const optionTo = new Option(timeDisplay, timeValue);
+                    toTimeSelect.add(optionTo);
+                }
+            }
+        }
+  
+        
+        function toggleDateTimeInputs() {
+            var bookingType = document.getElementById("bookingType").value;
+            var dateTimeGroup = document.getElementById("dateTimeGroup");
+            var hoursGroup = document.getElementById("hoursGroup");
+    
+            if (bookingType === "per_hour") {
+                dateTimeGroup.style.display = "block";
+                hoursGroup.style.display = "none";
+            } else {
+                dateTimeGroup.style.display = "none";
+                hoursGroup.style.display = "block";
+            }
+            calculateAmount();
+        }
+    
+        function calculateAmount() {
+            var bookingType = document.getElementById('bookingType').value;
+            var costPerHour = parseFloat(document.getElementById('costPerHour').value);
+            var costPerDay = parseFloat(document.getElementById('costPerDay').value);
+            var costPerMonth = parseFloat(document.getElementById('costPerMonth').value);
+            
+            var amount = 0;
+            var durationInHours = 0; 
+            if (bookingType === 'per_hour') {
+                var fromTime = document.getElementById('fromTime').value;
+                var toTime = document.getElementById('toTime').value;
+                var from = new Date(`1970-01-01T${fromTime}`);
+                var to = new Date(`1970-01-01T${toTime}`);
+                var diff = (to - from) / (1000 * 60 * 60);
+                if (diff < 0) diff += 24;  
+        
+                amount = diff * costPerHour;
+                durationInHours = diff; 
+            } else if (bookingType === 'per_day') {
+                amount = costPerDay;
+                durationInHours = 24;  
+            } else if (bookingType === 'per_month') {
+                amount = costPerMonth;
+                durationInHours = 24 * 30;  
+            }
+        
+            document.getElementById('amountDisplay').innerText = `Total Amount: USD ${amount.toFixed(2)}`;
+            document.getElementById('durationInHours').value = durationInHours.toFixed(2);  
+            document.getElementById('totalCost').value = amount.toFixed(2); 
+        }
+        
+        
+
+        document.getElementById('bookingType').addEventListener('change', calculateAmount);
+        document.getElementById('fromTime').addEventListener('change', function() {
+            calculateAmount();
+            updateToTimeOptions(); 
+        });
+                document.addEventListener('DOMContentLoaded', function() {
+            populateTimeOptions();
+            updateToTimeOptions();  
+            toggleDateTimeInputs();
+            calculateAmount();
+        });
+        
+        document.getElementById('toTime').addEventListener('change', calculateAmount);
+        document.getElementById('car').addEventListener('change', function() {
+            var carSelect = this.value;
+            var newCarForm = document.getElementById('newCarForm');
+            if (carSelect === 'new') {
+                newCarForm.style.display = 'block';
+            } else {
+                newCarForm.style.display = 'none';
+            }
+        });
+        
+        function formatAMPM(time) {
+            const parts = time.split(':');
+            let hour = parseInt(parts[0]);
+            const minutes = parts[1];
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12;
+            hour = hour ? hour : 12; // the hour '0' should be '12'
+            return `${hour.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - View Pending Parking Spaces</title>
+    <style>
+        /* Add your CSS styling here */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+            margin-right: 4px;
+        }
+        .view-btn { background-color: #3498db; }
+        .accept-btn { background-color: #2ecc71; }
+        .reject-btn { background-color: #e74c3c; }
+        .btn { background-color: #3498db;}
+    </style>
+</head>
+<body>
+    <h1>View Pending Parking Spaces</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Space ID</th>
+                <th>Type of Space</th>
+                <th>Number of Spots</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for space in pending_spaces %}
+            <tr>
+                <td>{{ space.space_id }}</td>
+                <td>{{ space.type_of_space }}</td>
+                <td>{{ space.num_spots }}</td>
+                <td>
+                    <a href="{{ url_for('admin_view_space_detail', space_id=space._id) }}" class="btn view-btn">View in Detail</a>
+                    <form action="{{ url_for('admin_accept_space', space_id=space._id) }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn accept-btn" onclick="return confirm('Are you sure you want to accept this parking space?');">Accept</button>
+                    </form>
+                    <form action="{{ url_for('admin_reject_space', space_id=space._id) }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn reject-btn" onclick="return confirm('Are you sure you want to reject this parking space?');">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a class="btn" href="{{ url_for('admin_dashboard') }}">Back to Admin Dashboard</a>
+
+</body>
+</html>

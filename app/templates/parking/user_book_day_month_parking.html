@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Parking - Day or Month</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="date"], input[type="month"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Parking Spot</h1>
+    <form action="{{ url_for('user_confirm_day_month_booking', space_id=parking_space.space_id) }}" method="post">
+        <div class="form-group">
+            <label for="bookingType">Booking Type:</label>
+            <select name="bookingType" id="bookingType" required onchange="toggleBookingInput(); calculateAmount();">
+                <option value="">Select Type</option>
+                <option value="per_day">Per Day</option>
+                <option value="per_month">Per Month</option>
+            </select>
+        </div>
+        <div class="form-group" id="dayInput" style="display:none;">
+            <label for="bookingDay">Select Date:</label>
+            <input type="date" id="bookingDay" name="bookingDay">
+        </div>
+        <div class="form-group" id="monthInput" style="display:none;">
+            <label for="bookingMonth">Select Month:</label>
+            <input type="month" id="bookingMonth" name="bookingMonth">
+        </div>
+        <div class="form-group">
+            <p id="amountDisplay">Total Amount: USD 0</p>
+            <input type="hidden" id="totalCost" name="totalCost" value="">
+
+            <input type="hidden" id="durationInHours" name="durationInHours" value="">
+
+        </div>
+        
+        <div class="form-group">
+            <label for="car">Select Your Car:</label>
+            <select name="car" id="car">
+                {% for car in cars %}
+                <option value="{{ car._id }}">{{ car.make }} {{ car.model }} --  {{ car.number_plate }}</option>
+                {% endfor %}    
+                <option value="new">Add New Car</option>
+        </select>
+        </div>
+
+        <button type="submit" class="submit-btn">Book Now</button>
+    </form>
+    <script>
+        function toggleBookingInput() {
+            var bookingType = document.getElementById("bookingType").value;
+            var dayInput = document.getElementById("dayInput");
+            var monthInput = document.getElementById("monthInput");
+            
+            dayInput.style.display = "none";
+            monthInput.style.display = "none";
+            
+            if (bookingType === "per_day") {
+                dayInput.style.display = "block";
+            } else if (bookingType === "per_month") {
+                monthInput.style.display = "block";
+            }
+            calculateAmount(); 
+        }
+    
+        function calculateAmount() {
+            var bookingType = document.getElementById("bookingType").value;
+            var amountDisplay = document.getElementById("amountDisplay");
+            var totalCostInput = document.getElementById("totalCost");
+        
+            // Example rates, adjust as necessary
+            var costPerDay = 20; // Assuming $20 per day
+            var costPerMonth = 500; // Assuming $500 per month
+        
+            if (bookingType === "per_day") {
+                totalCostInput.value = costPerDay;
+                amountDisplay.innerText = "Total Amount: USD " + costPerDay;
+            } else if (bookingType === "per_month") {
+                totalCostInput.value = costPerMonth;
+                amountDisplay.innerText = "Total Amount: USD " + costPerMonth;
+            } else {
+                totalCostInput.value = "";
+                amountDisplay.innerText = "Total Amount: USD 0";
+            }
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parking Space Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .details-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: bold;
+        }
+        .edit-btn, .delete-btn {
+            padding: 5px 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .edit-btn {
+            background-color: #f0ad4e;
+        }
+        .delete-btn {
+            background-color: #d9534f;
+        }
+        .view-btn {
+            padding: 5px 10px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            background-color: #5bc0de;
+        }
+    </style>
+</head>
+<body>
+    <div class="details-container">
+        <h1>Parking Space Details</h1>
+        <div class="detail-item"><span class="detail-label">Space ID:</span> {{ parking_space.space_id }}</div>
+        <div class="detail-item"><span class="detail-label">Type of Space:</span> {{ parking_space.type_of_space }}</div>
+        <div class="detail-item"><span class="detail-label">Number of Spots:</span> {{ parking_space.num_spots }}</div>
+        <div class="detail-item"><span class="detail-label">Status:</span> {{ parking_space.status }}</div>
+        <div class="detail-item"><span class="detail-label">Cost per Hour:</span> {{ parking_space.cost.per_hr }}</div>
+        <div class="detail-item"><span class="detail-label">Cost per Day:</span> {{ parking_space.cost.per_day }}</div>
+        <div class="detail-item"><span class="detail-label">Cost per Month:</span> {{ parking_space.cost.per_month }}</div>
+        
+   <br>
+
+    <a href="{{ url_for('view_parking_spaces') }}" class="view-btn">Back to List</a>
+    <a href="{{ url_for('edit_parking_space', space_id=parking_space.space_id) }}" class="edit-btn">Edit</a>
+    <a href="{{ url_for('delete_parking_space', space_id=parking_space.space_id) }}" class="delete-btn" onclick="return confirm('Are you sure?');">Delete</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Car Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"], select, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .btn{
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 16px;
+            color: white;
+            padding: 12px 18px;
+            background-color: gray;
+        }
+        .btn2{
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 16px;
+            color: white;
+            padding: 12px 18px;
+            background-color: blue;
+        }
+        .btn3{
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 16px;
+            color: white;
+            padding: 12px 18px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Edit Car Details</h1>
+        <form action="" method="post"> <!-- Ensure the action attribute is set to the correct URL -->
+            <div class="form-group">
+                <label for="car_id">Car ID:</label>
+                <input type="text" id="car_id" name="car_id" value="{{ car._id }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Type:</label>
+                <select id="type" name="type" required>
+                    <option value="Sedan" {{ 'selected' if car.type == 'Sedan' else '' }}>Sedan</option>
+                    <option value="SUV" {{ 'selected' if car.type == 'SUV' else '' }}>SUV</option>
+                    <option value="Hatchback" {{ 'selected' if car.type == 'Hatchback' else '' }}>Hatchback</option>
+                    <option value="Convertible" {{ 'selected' if car.type == 'Convertible' else '' }}>Convertible</option>
+                    <option value="Coupe" {{ 'selected' if car.type == 'Coupe' else '' }}>Coupe</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="make">Make:</label>
+                <select id="make" name="make" required>
+                    <option value="Toyota" {{ 'selected' if car.make == 'Toyota' else '' }}>Toyota</option>
+                    <option value="Honda" {{ 'selected' if car.make == 'Honda' else '' }}>Honda</option>
+                    <option value="Ford" {{ 'selected' if car.make == 'Ford' else '' }}>Ford</option>
+                    <option value="Chevrolet" {{ 'selected' if car.make == 'Chevrolet' else '' }}>Chevrolet</option>
+                    <option value="Nissan" {{ 'selected' if car.make == 'Nissan' else '' }}>Nissan</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <input type="text" id="model" name="model" value="{{ car.model }}">
+            </div>
+
+            <div class="form-group">
+                <label for="color">Color:</label>
+                <select id="color" name="color" required>
+                    <option value="Black" {{ 'selected' if car.color == 'Black' else '' }}>Black</option>
+                    <option value="White" {{ 'selected' if car.color == 'White' else '' }}>White</option>
+                    <option value="Gray" {{ 'selected' if car.color == 'Gray' else '' }}>Gray</option>
+                    <option value="Blue" {{ 'selected' if car.color == 'Blue' else '' }}>Blue</option>
+                    <option value="Red" {{ 'selected' if car.color == 'Red' else '' }}>Red</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="number_plate">Number plate:</label>
+                <input type="text" id="number_plate" name="number_plate" value="{{ car.number_plate }}" readonly>
+            </div>
+
+
+            <button type="submit">Update Car</button>
+        </form>
+
+        <a class="btn" href="{{ url_for('view_cars') }}">Back to Cars</a>
+
+        <a class="btn2" href="{{ url_for('user_dashboard') }}">Back to Dashboard</a>
+        <a class="btn3" href="{{ url_for('delete_user_car', car_id=car._id) }}">Delete</a>
+    </div>
+</body>
+</html>

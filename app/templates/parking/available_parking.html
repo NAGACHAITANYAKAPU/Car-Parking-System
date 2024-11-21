@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Parking Spots</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .book-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn {
+            background-color: #2f4465;
+            color: white;
+            border-radius: 5px;
+            padding: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Parking Spots</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Space ID</th>
+                <th>Type</th>
+                <th>Cost per Hour</th>
+                <th>Cost per Day</th>
+                <th>Cost per Month</th>
+                <th>Available Slots</th>
+                <th>Book</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for space in parking_spaces %}
+            <tr>
+                <td>{{ space.space_id }}</td>
+                <td>{{ space.type_of_space }}</td>
+                <td>${{ space.cost.per_hr }}</td>
+                <td>{{ space.cost.per_day }}</td>
+
+                <td>{{ space.cost.per_month }}</td>
+                <td>{{ space.available_slots }}</td>
+                <td>
+                    <!-- Link to the booking route with the space_id as parameter -->
+                    <a href="{{ url_for('user_book_parking', space_id=space.space_id) }}" class="book-btn">Hour</a>
+                    <a href="{{ url_for('user_book_day_month_parking', space_id=space.space_id) }}" class="book-btn">Day / Month </a> 
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a class="btn" href="{{ url_for('user_dashboard') }}">Back to Dashboard</a>
+
+</body>
+</html>

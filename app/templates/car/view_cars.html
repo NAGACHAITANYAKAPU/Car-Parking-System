@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>View My Cars</title>
+    
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+    }
+    
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        color: #ffffff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .button:hover, .button:focus {
+        background-color: #0056b3;
+        color: #ffffff;
+    }
+    
+    
+</style>
+</head>
+<body> 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <div style="width: 100%; max-width: 800px; margin: auto;">
+        <h1>My cars</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Color</th>
+                    <th>Number Plate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car in cars %}
+                <tr> 
+                    <td>{{ car.type }}</td>
+                    <td>{{ car.make }}</td>
+                    <td>{{ car.model }}</td>
+                    <td>{{ car.color }}</td>
+                    <td>{{ car.number_plate }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_user_car', car_id=car._id) }}">Edit</a>
+                        <a href="{{ url_for('delete_user_car', car_id=car._id) }}">Delete</a>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a class="button" href="{{ url_for('add_car') }}">Add a car</a>
+        <a class="button" href="{{ url_for('user_dashboard') }}">Back to Dashboard</a>
+    </div>
+</body>
+</html>

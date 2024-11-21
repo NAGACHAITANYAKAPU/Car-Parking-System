@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Car</title>
+   <style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    
+    h1 {
+        color: #333;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    input[type="text"], input[type="number"], select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .submit-btn:hover {
+        background-color: #45a049;
+    }
+
+    </style>
+</head>
+<body>
+    <h1>Add a New Car</h1>
+    <form action="{{ url_for('add_car') }}" method="post">
+        <div class="form-group">
+            <label for="carType">Type:</label>
+            <select id="carType" name="carType" required>
+                <option value="">Select Type</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="Convertible">Convertible</option>
+                <option value="Coupe">Coupe</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="carMake">Make:</label>
+            <select id="carMake" name="carMake" required>
+                <option value="">Select Make</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Honda">Honda</option>
+                <option value="Ford">Ford</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="Nissan">Nissan</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="carModel">Model:</label>
+            <input type="text" id="carModel" name="carModel" placeholder="Enter Model" required>
+        </div>
+        <div class="form-group">
+            <label for="carColor">Color:</label>
+            <select id="carColor" name="carColor" required>
+                <option value="">Select Color</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Gray">Gray</option>
+                <option value="Blue">Blue</option>
+                <option value="Red">Red</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="carNumberPlate">Number Plate:</label>
+            <input type="text" id="carNumberPlate" name="carNumberPlate" placeholder="ABC-1234" required>
+        </div>
+        <button type="submit" class="submit-btn">Add Car</button>
+    </form>
+    <a href="{{ url_for('user_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>

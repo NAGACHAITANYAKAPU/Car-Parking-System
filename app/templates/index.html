@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parking Master - Your Parking Management Hub</title>
+    <!-- <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      .header {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 0;
+        border: 5px solid #007bff;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 24px;
+      }
+
+      .intro-text {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 18px;
+        border-radius: 8px;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .link-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .button-link {
+        padding: 10px 20px;
+        font-size: 16px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+      }
+
+      .button-link:hover {
+        background-color: #0056b3;
+      }
+
+      footer {
+        margin-top: 20px;
+        text-align: center;
+        padding: 20px;
+        background-color: #f1f1f1;
+        color: #333;
+      }
+    </style> -->
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Align vertically */
+        align-items: center; /* Align horizontally */
+        height: 100vh;
+        margin: 0;
+        font-family: "Arial", sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      .header {
+        background-color: #0056b3; /* Darker blue for better contrast */
+        color: #fff;
+        padding: 20px 0;
+        border-radius: 8px;
+        width: 80%;
+        text-align: center;
+        font-size: 28px; /* Slightly larger font for header */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+      }
+
+      .intro-text {
+        margin-top: 50px;
+        max-width: 80%;
+        text-align: center;
+        font-size: 20px; /* Larger font for introduction */
+        color: #444; /* Darker font color for better readability */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Table Styles */
+      table {
+        width: 50%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to table */
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 15px; /* Increase padding for a more spacious layout */
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #28a745; /* A more vibrant green for headers */
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9; /* Lighter background for even rows */
+      }
+
+      .link-container {
+        gap: 10px; /* Maintain a gap between buttons */
+        margin-top: 20px;
+      }
+
+      /* Button Styles */
+      .button-link {
+        padding: 12px 25px;
+        font-size: 16px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease; /* Transition for smooth color change */
+      }
+
+      .button-link:hover {
+        background-color: #0056b3;
+        cursor: pointer; /* Change cursor to indicate clickable */
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .header {
+          font-size: 24px; /* Smaller font size on smaller screens */
+        }
+
+        .intro-text {
+          font-size: 18px;
+        }
+
+        .link-container {
+          flex-direction: column; /* Stack buttons vertically on small screens */
+          align-items: center;
+        }
+
+        .button-link {
+          width: 100%; /* Full width buttons on small screens */
+          margin-bottom: 10px; /* Add space between stacked buttons */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      Parking Master - Your Gateway to Seamless Parking Management
+    </div>
+    <p class="intro-text">
+      Welcome to Parking Master, your one-stop portal for managing and organizing
+      Parkings with ease. Discover, plan, and execute Parkings with our
+      comprehensive Parking management solutions.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Specialization</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for supervisor in supervisors %}
+        <tr>
+          <td>
+            {{ supervisor.name if supervisor.name else supervisor.user_name }}
+          </td>
+          <td>{{ supervisor.specialisation }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="link-container">
+      <a href="{{ url_for('login') }}" class="button-link">Login</a>
+      <a href="{{ url_for('register_supervisor') }}" class="button-link"
+        >Register as Supervisor</a
+      >
+      <a href="{{ url_for('register_user') }}" class="button-link"
+        >Register as User</a
+      >
+      <a href="{{ url_for('forgot_password') }}" class="button-link"
+        >Forgot Password?</a
+      >
+    </div>
+  </body>
+</html>
